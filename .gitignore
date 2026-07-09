@@ -1,0 +1,23 @@
+# Datasets
+datasets/
+
+# VS Code settings
+.vscode/
+
+# Python cache and build artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
+
+# Archives
+*.zip
+*.tar
+*.tar.gz
+
+# Notebook checkpoints
+.ipynb_checkpoints/
