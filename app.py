@@ -98,20 +98,14 @@ def load_selected_model(model_name: str):
 
 
 def preprocess_image(image: Image.Image, selected: dict):
-    image = image.convert("RGB")
-    image = image.resize(selected["size"])
-    st.write(f"{image.size}")
+    # All three models bake their preprocessing into the graph:
+    #   - Scratch CNN has a Rescaling(1/255) layer
+    #   - VGG16 / InceptionResNetV2 models have a Lambda(preprocess_input) layer
+    # So the correct input is raw 0-255 RGB pixels; applying scaling or
+    # preprocess_input here again would double-process the image.
+    image = image.convert("RGB").resize(selected["size"])
     image_array = np.asarray(image, dtype=np.float32)
-
-    if selected["kind"] == "scratch":
-        image_array = image_array / 255.0
-        return np.expand_dims(image_array, axis=0)
-
-    image_array = np.expand_dims(image_array, axis=0)
-    if selected["kind"] == "vgg16":
-        return vgg16_preprocess_input(image_array)
-
-    return inception_preprocess_input(image_array)
+    return np.expand_dims(image_array, axis=0)
 
 
 def predict_image(image: Image.Image, model, selected: dict, classes):
